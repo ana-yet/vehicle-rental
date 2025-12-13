@@ -1,6 +1,23 @@
 import { Request, Response } from "express";
 import { authServices } from "./auth.service";
 
+const createUser = async (req: Request, res: Response) => {
+  try {
+    const result = await authServices.createUser(req.body);
+    res.status(201).json({
+      success: true,
+      message: "Data Instered Successfully",
+      data: result.rows[0],
+    });
+  } catch (err: any) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 const userLogin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
@@ -21,4 +38,5 @@ const userLogin = async (req: Request, res: Response) => {
 
 export const authController = {
   userLogin,
+  createUser,
 };
