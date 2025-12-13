@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import initDB from "./config/db";
 
+import { userRoutes } from "./modules/user/user.routes";
+
 const app = express();
 // parser
 app.use(express.json());
@@ -12,6 +14,9 @@ initDB();
 app.get("/",  (req: Request, res: Response) => {
   res.send("Hello This is my server Ha Ha Ha!");
 });
+
+
+app.use("/api/v1/auth/signup", userRoutes);
 
 
 
