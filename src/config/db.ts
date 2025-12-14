@@ -7,6 +7,7 @@ export const pool = new Pool({
 });
 
 const initDB = async () => {
+  // USER TABLE
   await pool.query(`
         CREATE TABLE IF NOT EXISTS users(
         id SERIAL PRIMARY KEY,
@@ -20,34 +21,34 @@ const initDB = async () => {
         )
         `);
 
-        await pool.query(`
+  // VEHICLES TABLE
+  await pool.query(`
         CREATE TABLE IF NOT EXISTS vehicles(
         id SERIAL PRIMARY KEY,
-        make VARCHAR(100) NOT NULL,
-        model VARCHAR(100) NOT NULL,
-        year INT NOT NULL,
-        type VARCHAR(50) NOT NULL,
-        availability_status BOOLEAN DEFAULT TRUE,
-        rental_price_per_day DECIMAL(10, 2) NOT NULL,
+        vehicle_name VARCHAR(100) NOT NULL,
+        type VARCHAR(10) NOT NULL CHECK (type IN ('car', 'bike', 'van', 'SUV')),
+        registration_number VARCHAR(50) UNIQUE NOT NULL,
+        availability_status VARCHAR(10) NOT NULL CHECK (availability_status IN ('available', 'booked')),
+        daily_rent_price NUMERIC(10,2) NOT NULL CHECK (daily_rent_price > 0),
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW()
         )
         `);
 
-        await pool.query(`
+  // RENTALS TABLE
+  await pool.query(`
         CREATE TABLE IF NOT EXISTS rentals(
         id SERIAL PRIMARY KEY,
-        user_id INT REFERENCES users(id) ON DELETE SET NULL,
-        vehicle_id INT REFERENCES vehicles(id) ON DELETE SET NULL,
-        rental_start_date DATE NOT NULL,
-        rental_end_date DATE NOT NULL,
-        total_price DECIMAL(10, 2) NOT NULL,
-        status VARCHAR(50) DEFAULT 'ongoing' CHECK (status IN ('ongoing', 'completed', 'cancelled')),
+        customer_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        vehicle_id INT NOT NULL REFERENCES vehicles(id) ON DELETE CASCADE,
+        rent_start_date DATE NOT NULL,
+        rent_end_date DATE NOT NULL CHECK (rent_end_date > rent_start_date),
+        total_price NUMERIC(10,2) NOT NULL CHECK (total_price > 0),
+        status VARCHAR(10) NOT NULL CHECK (status IN ('active', 'cancelled', 'returned')),
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW()
         )
         `);
-
 };
 
 export default initDB;
