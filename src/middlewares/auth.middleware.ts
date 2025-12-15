@@ -2,40 +2,39 @@ import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../config";
 
-const adminMiddleware = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const authHeader = req.headers["authorization"];
+const auth = (...roles: string[]) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const authHeader = req.headers["authorization"];
 
-  // if token is not available return
-  if (!authHeader)
-    res.status(401).json({ error: "Unauthorized: no token provided" });
+    // if token is not provided return
+    if (!authHeader)
+      res.status(401).json({ error: "Unauthorized: No token provided" });
 
-  // bearer token
-  const token = authHeader?.split(" ")[1];
+    const token = authHeader?.split(" ")[1];
 
-  try {
-    const decoded = jwt.verify(
-      token as string,
-      config.jwtSecret as string
-    ) as JwtPayload;
+    try {
+      // decode the token
+      const decoded = jwt.verify(
+        token as string,
+        config.jwtSecret as string
+      ) as JwtPayload;
 
-    // check is user admin
-    const isAdmin = decoded.role === "admin";
+      (req as any).user = decoded;
 
-    if (!isAdmin) {
-      res.status(403).json({ error: "Forbidden: Admins only" });
-      return;
+      // verify role
+      if (roles.length && !roles.includes(decoded.role as string)) {
+        return res.status(500).json({
+          error: "unauthorized!!!",
+        });
+      }
+
+      next();
+    } catch (err: any) {
+      res.status(401).json({
+        error: "Unauthorized: Invalid token",
+      });
     }
-
-    (req as any).user = decoded;
-
-    next();
-  } catch (err: any) {
-    res.status(401).json({ error: "Unauthorized: Invalid token" });
-  }
+  };
 };
 
-export const authMiddleware = { adminMiddleware };
+export default auth;
