@@ -1,5 +1,6 @@
 import { pool } from "../../config/db";
 
+// create vehicle (admin only)
 const createVehicle = async (payload: Record<string, unknown>) => {
   const {
     vehicle_name,
@@ -23,12 +24,20 @@ const createVehicle = async (payload: Record<string, unknown>) => {
   return result;
 };
 
+// get all vehicles
 const getVehicles = async () => {
   const result = await pool.query(`SELECT * FROM vehicles`);
+  return result;
+};
+
+// get single vehicle by id
+const getVehicleById = async (id: string) => {
+  const result = await pool.query(`SELECT * FROM vehicles WHERE id = $1`, [id]);
   return result;
 };
 
 export const vehiclesService = {
   createVehicle,
   getVehicles,
+  getVehicleById,
 };

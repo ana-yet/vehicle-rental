@@ -22,6 +22,25 @@ const getVehicles = async (req: Request, res: Response) => {
   }
 };
 
+const getVehicleById = async (req: Request, res: Response) => {
+  try {
+    const result = await vehiclesService.getVehicleById(
+      req.params.vehicleId as string
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Vehicle retrieved successfully",
+      data: result.rows[0],
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 // create a vehicle (admin only)
 const createVehicle = async (req: Request, res: Response) => {
   try {
@@ -42,4 +61,5 @@ const createVehicle = async (req: Request, res: Response) => {
 export const vehiclesController = {
   getVehicles,
   createVehicle,
+  getVehicleById,
 };
