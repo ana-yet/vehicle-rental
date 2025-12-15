@@ -1,6 +1,25 @@
 import { Request, Response } from "express";
 import { vehiclesService } from "./vehicles.service";
 
+// get all vehicle
+const getVehicles = async (req: Request, res: Response) => {
+  try {
+    const result = await vehiclesService.getVehicles();
+
+    res.status(200).json({
+      success: true,
+      message: "Vehicles retrieved successfully",
+      data: result.rows,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+// create a vehicle (admin only)
 const createVehicle = async (req: Request, res: Response) => {
   try {
     const result = await vehiclesService.createVehicle(req.body);
@@ -10,7 +29,6 @@ const createVehicle = async (req: Request, res: Response) => {
       data: result.rows[0],
     });
   } catch (err: any) {
-    console.log(err);
     res.status(500).json({
       success: false,
       message: err.message,
@@ -19,5 +37,6 @@ const createVehicle = async (req: Request, res: Response) => {
 };
 
 export const vehiclesController = {
+  getVehicles,
   createVehicle,
 };

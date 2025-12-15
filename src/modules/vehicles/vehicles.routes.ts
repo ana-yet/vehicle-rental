@@ -4,6 +4,8 @@ import { authMiddleware } from "../../middlewares/auth.middleware";
 
 const router = Router();
 
+router.get("/", vehiclesController.getVehicles);
+
 router.post(
   "/",
   authMiddleware.adminMiddleware,
