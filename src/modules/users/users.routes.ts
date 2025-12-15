@@ -5,5 +5,6 @@ import auth from "../../middlewares/auth.middleware";
 const router = Router();
 
 router.get("/", auth("admin"), usersController.getAllUsers);
+router.put("/:userId", auth("admin", "customer"), usersController.updateUser);
 
 export const usersRoutes = router;
