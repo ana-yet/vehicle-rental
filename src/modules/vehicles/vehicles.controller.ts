@@ -8,7 +8,10 @@ const getVehicles = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: "Vehicles retrieved successfully",
+      message:
+        result.rows.length > 0
+          ? "Vehicles retrieved successfully"
+          : "No vehicles found",
       data: result.rows,
     });
   } catch (err: any) {
