@@ -8,6 +8,7 @@ const router = Router();
 router.get("/", vehiclesController.getVehicles);
 router.get("/:vehicleId", vehiclesController.getVehicleById);
 
+// admin routes
 router.post(
   "/",
   authMiddleware.adminMiddleware,
