@@ -83,6 +83,88 @@ const createBooking = async (
   };
 };
 
+const getAllBookings = async (userId: string, role: string) => {
+  // ADMIN VIEW
+  if (role === "admin") {
+    const result = await pool.query(`
+      SELECT 
+        r.id,
+        r.customer_id,
+        r.vehicle_id,
+        r.rent_start_date,
+        r.rent_end_date,
+        r.total_price,
+        r.status,
+
+        u.name AS customer_name,
+        u.email AS customer_email,
+
+        v.vehicle_name,
+        v.registration_number
+      FROM rentals r
+      JOIN users u ON r.customer_id = u.id
+      JOIN vehicles v ON r.vehicle_id = v.id
+      ORDER BY r.created_at DESC
+    `);
+
+    // format response
+    return result.rows.map((row) => ({
+      id: row.id,
+      customer_id: row.customer_id,
+      vehicle_id: row.vehicle_id,
+      rent_start_date: row.rent_start_date,
+      rent_end_date: row.rent_end_date,
+      total_price: row.total_price,
+      status: row.status,
+      customer: {
+        name: row.customer_name,
+        email: row.customer_email,
+      },
+      vehicle: {
+        vehicle_name: row.vehicle_name,
+        registration_number: row.registration_number,
+      },
+    }));
+  }
+
+  // CUSTOMER VIEW
+  const result = await pool.query(
+    `
+    SELECT
+      r.id,
+      r.vehicle_id,
+      r.rent_start_date,
+      r.rent_end_date,
+      r.total_price,
+      r.status,
+
+      v.vehicle_name,
+      v.registration_number,
+      v.type
+    FROM rentals r
+    JOIN vehicles v ON r.vehicle_id = v.id
+    WHERE r.customer_id = $1
+    ORDER BY r.created_at DESC
+    `,
+    [userId]
+  );
+
+  return result.rows.map((row) => ({
+    id: row.id,
+    vehicle_id: row.vehicle_id,
+    rent_start_date: row.rent_start_date,
+    rent_end_date: row.rent_end_date,
+    total_price: row.total_price,
+    status: row.status,
+    vehicle: {
+      vehicle_name: row.vehicle_name,
+      registration_number: row.registration_number,
+      type: row.type,
+    },
+  }));
+};
+
 export const bookingsService = {
   createBooking,
+  getAllBookings,
 };
