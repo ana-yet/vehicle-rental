@@ -164,7 +164,73 @@ const getAllBookings = async (userId: string, role: string) => {
   }));
 };
 
+const updateBooking = async (
+  bookingId: number,
+  userId: number,
+  role: string
+) => {
+  // customer cancel
+  if (role === "customer") {
+    const result = await pool.query(
+      `
+      UPDATE rentals
+      SET status = 'cancelled',
+          updated_at = NOW()
+      WHERE id = $1 AND customer_id = $2
+      RETURNING *
+      `,
+      [bookingId, userId]
+    );
+
+    if (result.rowCount === 0) {
+      throw new Error("Booking not found or not allowed");
+    }
+
+    return result.rows[0];
+  }
+
+  // admin return
+  if (role === "admin") {
+    const bookingResult = await pool.query(
+      `
+      UPDATE rentals
+      SET status = 'returned',
+          updated_at = NOW()
+      WHERE id = $1
+      RETURNING *
+      `,
+      [bookingId]
+    );
+
+    if (bookingResult.rowCount === 0) {
+      throw new Error("Booking not found");
+    }
+
+    const booking = bookingResult.rows[0];
+
+    // update vehicle
+    await pool.query(
+      `
+      UPDATE vehicles
+      SET availability_status = 'available'
+      WHERE id = $1
+      `,
+      [booking.vehicle_id]
+    );
+
+    return {
+      ...booking,
+      vehicle: {
+        availability_status: "available",
+      },
+    };
+  }
+
+  throw new Error("You are not allowed to perform this action");
+};
+
 export const bookingsService = {
   createBooking,
   getAllBookings,
+  updateBooking,
 };
