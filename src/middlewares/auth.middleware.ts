@@ -24,15 +24,15 @@ const auth = (...roles: string[]) => {
 
       // verify role
       if (roles.length && !roles.includes(decoded.role as string)) {
-        return res.status(500).json({
-          error: "unauthorized!!!",
+        return res.status(403).json({
+          error: "Valid token but insufficient permissions",
         });
       }
 
       next();
     } catch (err: any) {
       res.status(401).json({
-        error: "Unauthorized: Invalid token",
+        error: "Missing or invalid authentication token",
       });
     }
   };
