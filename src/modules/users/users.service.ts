@@ -29,7 +29,32 @@ const updateUser = async (
 };
 
 const deleteUser = async (id: string) => {
-  const result = await pool.query(`DELETE FROM users WHERE id = $1`, [id]);
+  // if user has any booking
+  const bookingCheck = await pool.query(
+    `
+    SELECT 1
+    FROM rentals
+    WHERE customer_id = $1
+    LIMIT 1
+    `,
+    [id]
+  );
+
+  // If booking exists don't delete
+  if ((bookingCheck.rowCount as number) > 0) {
+    throw new Error("User has existing bookings and cannot be deleted");
+  }
+
+  // Delete user
+  const result = await pool.query(
+    `
+    DELETE FROM users
+    WHERE id = $1
+    RETURNING *
+    `,
+    [id]
+  );
+
   return result;
 };
 
