@@ -1,4 +1,3 @@
-```markdown
 # 🌐 API Reference
 
 ## Vehicle Rental System
@@ -17,11 +16,12 @@ This document provides the complete API reference for the Vehicle Rental System,
 - **Description:** Register a new user account
 
 **Endpoint**
+
 ```
 
 POST /api/v1/auth/signup
 
-````
+```
 
 **Request Body**
 
@@ -33,7 +33,7 @@ POST /api/v1/auth/signup
   "phone": "01712345678",
   "role": "customer"
 }
-````
+```
 
 **Success Response (201 Created)**
 
@@ -402,15 +402,9 @@ PUT /api/v1/bookings/:bookingId
 Authorization: Bearer <jwt_token>
 ```
 
----
-
 ## ⚠️ Important Business Rules
 
 - Vehicles cannot be double-booked
 - Active bookings block deletion of users and vehicles
 - Booking price = `daily price × number of days`
 - Vehicle status updates automatically based on booking status
-
-```
-
-```

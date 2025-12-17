@@ -1,7 +1,7 @@
-```markdown
 # 🚗 Vehicle Rental System API
 
 ## Live URL:
+
 ```
 
 https://vehicle-rental-seven.vercel.app/
@@ -106,37 +106,37 @@ Each module contains:
 
 ### Users
 
-| Field    | Description            |
-|----------|------------------------|
-| id       | auto-generated         |
-| name     |                        |
-| email    | unique, lowercase      |
-| password |                        |
-| phone    |                        |
-| role     | admin, customer        |
+| Field    | Description       |
+| -------- | ----------------- |
+| id       | auto-generated    |
+| name     |                   |
+| email    | unique, lowercase |
+| password |                   |
+| phone    |                   |
+| role     | admin, customer   |
 
 ### Vehicles
 
-| Field               | Description              |
-|---------------------|--------------------------|
-| id                  |                          |
-| vehicle_name        |                          |
-| type                | car, bike, van, SUV      |
-| registration_number | unique                   |
-| daily_rent_price    |                          |
-| availability_status | available, booked        |
+| Field               | Description         |
+| ------------------- | ------------------- |
+| id                  |                     |
+| vehicle_name        |                     |
+| type                | car, bike, van, SUV |
+| registration_number | unique              |
+| daily_rent_price    |                     |
+| availability_status | available, booked   |
 
 ### Bookings
 
-| Field           | Description                    |
-|-----------------|--------------------------------|
-| id              |                                |
-| customer_id     |                                |
-| vehicle_id      |                                |
-| rent_start_date |                                |
-| rent_end_date   |                                |
-| total_price     |                                |
-| status          | active, cancelled, returned    |
+| Field           | Description                 |
+| --------------- | --------------------------- |
+| id              |                             |
+| customer_id     |                             |
+| vehicle_id      |                             |
+| rent_start_date |                             |
+| rent_end_date   |                             |
+| total_price     |                             |
+| status          | active, cancelled, returned |
 
 ---
 
@@ -148,7 +148,7 @@ All protected routes require a JWT token in the request header:
 
 Authorization: Bearer <jwt_token>
 
-````
+```
 
 Tokens are generated during login and validated for every protected request.
 
@@ -158,7 +158,7 @@ Tokens are generated during login and validated for every protected request.
 
 Detailed API request and response specifications are available here:
 
-📖 **[API Reference](API_REFERENCE)** *( or look at the API_REFERENCE.md file)*
+📖 **[API Reference](API_REFERENCE)** _( or look at the API_REFERENCE.md file)_
 
 All endpoints strictly follow the defined API reference, including:
 
@@ -176,7 +176,7 @@ All endpoints strictly follow the defined API reference, including:
 ```bash
 git clone https://github.com/ana-yet/vehicle-rental.git
 cd vehicle-rental
-````
+```
 
 ### 2️⃣ Install Dependencies
 
@@ -241,7 +241,3 @@ http://localhost:5000
 **Vehicle Rental System API**
 
 Backend project built using **Node.js**, **TypeScript**, **Express**, and **PostgreSQL**
-
-```
-
-```
