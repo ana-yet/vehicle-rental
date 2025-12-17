@@ -158,7 +158,7 @@ Tokens are generated during login and validated for every protected request.
 
 Detailed API request and response specifications are available here:
 
-📖 **[API Reference](API_REFERENCE)** _( or look at the API_REFERENCE.md file)_
+📖 **[API Reference](API_REFERENCE.md)** _( or look at the API_REFERENCE.md file)_
 
 All endpoints strictly follow the defined API reference, including:
 
